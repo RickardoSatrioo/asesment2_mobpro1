@@ -16,6 +16,6 @@ interface UkmDao {
     @Update
     suspend fun update(ukm: Ukm)
 
-    @Query("SELECT * FROM Ukm ORDER BY id DESC")
+    @Query("SELECT * FROM ukm")
     fun getUkm(): Flow<List<Ukm>>
 }

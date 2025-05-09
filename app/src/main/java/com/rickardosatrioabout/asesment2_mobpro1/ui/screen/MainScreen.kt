@@ -21,10 +21,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +38,7 @@ import com.rickardosatrioabout.asesment2_mobpro1.R
 import com.rickardosatrioabout.asesment2_mobpro1.model.Ukm
 import com.rickardosatrioabout.asesment2_mobpro1.navigation.Screen
 import com.rickardosatrioabout.asesment2_mobpro1.ui.theme.Asesment2_mobpro1Theme
+import com.rickardosatrioabout.asesment2_mobpro1.util.ViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,8 +75,11 @@ fun MainScreen(navController: NavHostController) {
 
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostController) {
-    val viewModel: MainViewModel = viewModel()
-    val data = viewModel.data
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: MainViewModel = viewModel(factory = factory)
+    val data by viewModel.data.collectAsState()
+
 
     if (data.isEmpty()) {
         Column(
@@ -86,14 +93,13 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
         LazyColumn(modifier = modifier.fillMaxSize()) {
             items(data) { ukm ->
                 UkmListItem(ukm = ukm) {
-                    navController.navigate(Screen.FormBaru.withId(ukm.id)) // Ganti Ukm.id menjadi ukm.id
+                    navController.navigate(Screen.FormBaru.withId(ukm.id)) // Use ukm.id here
                 }
                 HorizontalDivider()
             }
         }
     }
 }
-
 
 @Composable
 fun UkmListItem(ukm: Ukm, onClick: () -> Unit) {
