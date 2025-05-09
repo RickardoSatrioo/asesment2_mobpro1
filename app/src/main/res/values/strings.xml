@@ -4,4 +4,8 @@
     <string name="x_diklik">%1$s diklik!</string>
     <string name="belum_bisa">Belum bisa tambah UKM</string>
     <string name="tambah_UKM">Tambah UKM</string>
+    <string name="nama_UKM">Nama UKM</string>
+    <string name="nama_ketua">Nama Ketua UKM</string>
+    <string name="kontak_UKM">Kontak UKM</string>
+    <string name="deskripsi">Deskripsi UKM</string>
 </resources>
