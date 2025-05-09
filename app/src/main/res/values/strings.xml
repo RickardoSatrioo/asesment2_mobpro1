@@ -2,4 +2,6 @@
     <string name="app_name">Kontak UKM</string>
     <string name="List_kosong">Belum ada data</string>
     <string name="x_diklik">%1$s diklik!</string>
+    <string name="belum_bisa">Belum bisa tambah UKM</string>
+    <string name="tambah_UKM">Tambah UKM</string>
 </resources>
