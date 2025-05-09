@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.rickardosatrioabout.asesment2_mobpro1.navigation.SetupNavGraph
 import com.rickardosatrioabout.asesment2_mobpro1.ui.screen.MainScreen
 import com.rickardosatrioabout.asesment2_mobpro1.ui.theme.Asesment2_mobpro1Theme
 
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Asesment2_mobpro1Theme {
-                MainScreen()
+                SetupNavGraph()
             }
         }
     }
