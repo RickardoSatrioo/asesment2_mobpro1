@@ -1,6 +1,8 @@
 package com.rickardosatrioabout.asesment2_mobpro1.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,7 +55,8 @@ fun MainScreen(){
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier){
     val viewModel: MainViewModel = viewModel()
-    val data = emptyList<ukm>()
+    val data = viewModel.data
+    val context = LocalContext.current
 
     if (data.isEmpty()) {
         Column(
@@ -64,8 +68,11 @@ fun ScreenContent(modifier: Modifier = Modifier){
         }
     } else {
         LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(data) { ukm ->
-                UkmListItem(ukm = ukm)
+            items(data) {
+                UkmListItem(ukm = it){
+                    val pesan = context.getString(R.string.x_diklik, it.namaukm)
+                    Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
+                }
                 HorizontalDivider()
             }
         }
@@ -75,16 +82,21 @@ fun ScreenContent(modifier: Modifier = Modifier){
         modifier.fillMaxSize()
     ){
         items(data){
-            UkmListItem(ukm = it)
+            UkmListItem(ukm = it) {
+                val pesan = context.getString(R.string.x_diklik, it.namaukm)
+                Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
+            }
             HorizontalDivider()
         }
     }
 }
 
 @Composable
-fun UkmListItem(ukm: ukm) {
+fun UkmListItem(ukm: ukm, onClick: () -> Unit) {
     Column (
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier.fillMaxWidth()
+            .clickable { onClick() }
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
