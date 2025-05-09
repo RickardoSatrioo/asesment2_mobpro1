@@ -23,7 +23,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,7 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.rickardosatrioabout.asesment2_mobpro1.R
-import com.rickardosatrioabout.asesment2_mobpro1.model.ukm
+import com.rickardosatrioabout.asesment2_mobpro1.model.Ukm
 import com.rickardosatrioabout.asesment2_mobpro1.navigation.Screen
 import com.rickardosatrioabout.asesment2_mobpro1.ui.theme.Asesment2_mobpro1Theme
 
@@ -74,7 +73,6 @@ fun MainScreen(navController: NavHostController) {
 fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val data = viewModel.data
-    val context = LocalContext.current
 
     if (data.isEmpty()) {
         Column(
@@ -86,9 +84,9 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
         }
     } else {
         LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(data) {
-                UkmListItem(ukm = it) {
-                    navController.navigate(Screen.FormBaru.route)
+            items(data) { ukm ->
+                UkmListItem(ukm = ukm) {
+                    navController.navigate(Screen.FormBaru.withId(ukm.id)) // Ganti Ukm.id menjadi ukm.id
                 }
                 HorizontalDivider()
             }
@@ -96,8 +94,9 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
     }
 }
 
+
 @Composable
-fun UkmListItem(ukm: ukm, onClick: () -> Unit) {
+fun UkmListItem(ukm: Ukm, onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth()
             .clickable { onClick() }

@@ -1,12 +1,12 @@
 package com.rickardosatrioabout.asesment2_mobpro1.ui.screen
 
 import androidx.lifecycle.ViewModel
-import com.rickardosatrioabout.asesment2_mobpro1.model.ukm
+import com.rickardosatrioabout.asesment2_mobpro1.model.Ukm
 
 class MainViewModel : ViewModel() {
 
     val data = listOf(
-        ukm(
+        Ukm(
             id = 1,
             namaukm = "UKM Teknologi",
             namaketua = "Budi Santoso",
@@ -14,7 +14,7 @@ class MainViewModel : ViewModel() {
             deskripsi = "Mengembangkan aplikasi dan website untuk berbagai kebutuhan.",
             status = true
         ),
-        ukm(
+        Ukm(
             id = 2,
             namaukm = "UKM Kuliner",
             namaketua = "Siti Aminah",
@@ -22,7 +22,7 @@ class MainViewModel : ViewModel() {
             deskripsi = "Menjual makanan sehat dan bergizi.",
             status = true
         ),
-        ukm(
+        Ukm(
             id = 3,
             namaukm = "UKM Olahraga",
             namaketua = "Andi Pratama",
@@ -30,7 +30,7 @@ class MainViewModel : ViewModel() {
             deskripsi = "Fasilitas olahraga untuk pelatihan dan turnamen.",
             status = true
         ),
-        ukm(
+        Ukm(
             id = 4,
             namaukm = "UKM Seni Musik",
             namaketua = "Rina Dewi",
@@ -38,7 +38,7 @@ class MainViewModel : ViewModel() {
             deskripsi = "Kegiatan seni musik untuk melatih bakat anak muda.",
             status = false
         ),
-        ukm(
+        Ukm(
             id = 5,
             namaukm = "UKM Kewirausahaan",
             namaketua = "Dewi Lestari",
@@ -47,4 +47,8 @@ class MainViewModel : ViewModel() {
             status = true
         )
     )
+
+    fun getUkm(id: Long): Ukm? {
+        return data.find { it.id == id }
+    }
 }
