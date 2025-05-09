@@ -8,4 +8,6 @@
     <string name="nama_ketua">Nama Ketua UKM</string>
     <string name="kontak_UKM">Kontak UKM</string>
     <string name="deskripsi">Deskripsi UKM</string>
+    <string name="kembali">Kembali</string>
+    <string name="simpan">Simpan</string>
 </resources>
