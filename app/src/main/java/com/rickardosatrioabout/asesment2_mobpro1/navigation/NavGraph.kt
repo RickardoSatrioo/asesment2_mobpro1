@@ -18,8 +18,8 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         composable(route = Screen.Home.route) {
             MainScreen(navController)
         }
-        composable(route = "form_baru/{id}") { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id")?.toLong() ?: 0L
+        composable(route = Screen.FormBaru.route) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
             DetailScreen(navController, id)
         }
     }

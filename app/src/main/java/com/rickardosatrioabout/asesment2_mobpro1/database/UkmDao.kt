@@ -9,13 +9,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UkmDao {
-
     @Insert
     suspend fun insert(ukm: Ukm)
 
     @Update
     suspend fun update(ukm: Ukm)
 
-    @Query("SELECT * FROM ukm")
+    @Query("SELECT * FROM ukm ORDER BY namaukm ASC")
     fun getUkm(): Flow<List<Ukm>>
+
+    @Query("SELECT * FROM ukm WHERE id = :id LIMIT 1")
+    suspend fun getUkmById(id: Long): Ukm?
 }

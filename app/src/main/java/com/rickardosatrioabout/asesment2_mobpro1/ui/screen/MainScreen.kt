@@ -78,7 +78,7 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
     val context = LocalContext.current
     val factory = ViewModelFactory(context)
     val viewModel: MainViewModel = viewModel(factory = factory)
-    val data by viewModel.data.collectAsState()
+    val data by viewModel.data.collectAsState(initial = emptyList())
 
 
     if (data.isEmpty()) {

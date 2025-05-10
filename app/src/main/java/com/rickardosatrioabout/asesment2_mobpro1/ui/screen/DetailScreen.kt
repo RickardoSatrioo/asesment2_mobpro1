@@ -1,6 +1,7 @@
 package com.rickardosatrioabout.asesment2_mobpro1.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -36,29 +38,30 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.rickardosatrioabout.asesment2_mobpro1.R
 import com.rickardosatrioabout.asesment2_mobpro1.ui.theme.Asesment2_mobpro1Theme
+import com.rickardosatrioabout.asesment2_mobpro1.util.ViewModelFactory
 
 const val KEY_ID_CATATAN = "idCatatan"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(navController: NavHostController, id: Long? = null) {
-    val viewModel: MainViewModel = viewModel()
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: DetailViewModel = viewModel(factory = factory)
 
     var namaUkm by remember { mutableStateOf("") }
     var namaKetua by remember { mutableStateOf("") }
     var kontakUkm by remember { mutableStateOf("") }
     var deskripsi by remember { mutableStateOf("") }
 
-// Jika id null, kita set ke 0L atau ID default lainnya
-    val validId = id ?: 0L
-
-    LaunchedEffect(validId) {
-        val data = viewModel.getUkm(validId)  // Pastikan id sudah valid
-        if (data != null) {
-            namaUkm = data.namaukm
-            namaKetua = data.namaketua
-            kontakUkm = data.kontak
-            deskripsi = data.deskripsi
+    LaunchedEffect(id) {
+        id?.let { nonNullId ->
+            viewModel.getUkm(nonNullId)?.let { ukm ->
+                namaUkm = ukm.namaukm
+                namaKetua = ukm.namaketua
+                kontakUkm = ukm.kontak
+                deskripsi = ukm.deskripsi
+            }
         }
     }
 
@@ -85,7 +88,19 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 actions = {
-                    IconButton (onClick = {navController.popBackStack()}) {
+                    IconButton(onClick = {
+                        if (namaUkm.isBlank() || namaKetua.isBlank() || kontakUkm.isBlank() || deskripsi.isBlank()) {
+                            Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
+                            return@IconButton
+                        }
+
+                        if (id == null) {
+                            viewModel.insert(namaUkm, namaKetua, kontakUkm, deskripsi)
+                        } else {
+                            viewModel.update(id, namaUkm, namaKetua, kontakUkm, deskripsi)
+                        }
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = stringResource(R.string.simpan),
