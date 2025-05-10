@@ -1,16 +1,24 @@
 package com.rickardosatrioabout.asesment2_mobpro1.ui.screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -64,8 +72,8 @@ fun MainScreen(navController: NavHostController) {
                     IconButton(onClick = { showList = !showList }) {
                         Icon(
                             painter = painterResource(
-                                if (showList) R.drawable.baseline_grid_view_24
-                                else R.drawable.baseline_view_list_24
+                                if (showList) R.drawable.baseline_view_list_24
+                                else R.drawable.baseline_grid_view_24
                             ),
                             contentDescription = stringResource(
                                 if (showList) R.string.grid
@@ -91,17 +99,16 @@ fun MainScreen(navController: NavHostController) {
             }
         }
     ) { innePading ->
-        ScreenContent(Modifier.padding(innePading), navController)
+        ScreenContent(showList, Modifier.padding(innePading), navController)
     }
 }
 
 @Composable
-fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostController) {
+fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navController: NavHostController) {
     val context = LocalContext.current
     val factory = ViewModelFactory(context)
     val viewModel: MainViewModel = viewModel(factory = factory)
     val data by viewModel.data.collectAsState(initial = emptyList())
-
 
     if (data.isEmpty()) {
         Column(
@@ -112,12 +119,28 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
             Text(text = stringResource(id = R.string.List_kosong))
         }
     } else {
-        LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(data) { ukm ->
-                UkmListItem(ukm = ukm) {
-                    navController.navigate(Screen.FormBaru.withId(ukm.id)) // Use ukm.id here
+        if (showList) {
+            LazyColumn(modifier = modifier.fillMaxSize()) {
+                items(data) { ukm ->
+                    UkmListItem(ukm = ukm) {
+                        navController.navigate(Screen.FormBaru.withId(ukm.id))
+                    }
+                    HorizontalDivider()
                 }
-                HorizontalDivider()
+            }
+        } else {
+            LazyVerticalStaggeredGrid(
+                modifier = modifier.fillMaxSize(),
+                columns = StaggeredGridCells.Fixed(2),
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp)
+            ) {
+                items(data) { ukm ->
+                    GridItem(ukm = ukm) {
+                        navController.navigate(Screen.FormBaru.withId(ukm.id))
+                    }
+                }
             }
         }
     }
@@ -150,6 +173,45 @@ fun UkmListItem(ukm: Ukm, onClick: () -> Unit) {
         )
     }
 }
+
+@Composable
+fun GridItem(ukm: Ukm, onClick: () -> Unit) {
+    Card (
+        modifier = Modifier.fillMaxWidth().clickable { onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        border = BorderStroke(1.dp, DividerDefaults.color)
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = ukm.namaukm,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = ukm.namaketua,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = ukm.kontak,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = ukm.deskripsi,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
