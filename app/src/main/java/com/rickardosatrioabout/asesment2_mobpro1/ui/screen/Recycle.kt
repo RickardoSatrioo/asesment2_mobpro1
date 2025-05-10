@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -62,15 +63,28 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun RecycleScreen(navController: NavHostController) {
     val dataStore = SettingsDataStore(LocalContext.current)
     val showList by dataStore.layoutFlow.collectAsState(true)
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: MainViewModel = viewModel(factory = factory)
+    val data by viewModel.data.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(id = R.string.app_name))
+                    Text(text = stringResource(id = R.string.recyclebin))
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.kembali),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -94,57 +108,22 @@ fun MainScreen(navController: NavHostController) {
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
-                    var expanded by remember { mutableStateOf(false) }
-                    IconButton(onClick = { expanded = !expanded }) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = stringResource(R.string.lainnya),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = stringResource(id = R.string.recyclebin))
-                            },
-                            onClick = {
-                                expanded = false
-                                navController.navigate(Screen.Recycle.route)
-                            }
-                        )
-                    }
                 }
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.FormBaru.route)
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.tambah_UKM),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
-    ) { innePading ->
-        ScreenContent(showList, Modifier.padding(innePading), navController)
+    ) { innerPadding ->
+        ScreenContentRecycle(showList, Modifier.padding(innerPadding), navController, data)
     }
 }
 
 @Composable
-fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navController: NavHostController) {
-    val context = LocalContext.current
-    val factory = ViewModelFactory(context)
-    val viewModel: MainViewModel = viewModel(factory = factory)
-    val data by viewModel.data.collectAsState(initial = emptyList())
-
-    val filteredData = data.filter { it.status }
+fun ScreenContentRecycle(
+    showList: Boolean,
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    data: List<Ukm>
+) {
+    val filteredData = data.filter { !it.status }
 
     if (filteredData.isEmpty()) {
         Column(
@@ -158,7 +137,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navControlle
         if (showList) {
             LazyColumn(modifier = modifier.fillMaxSize()) {
                 items(filteredData) { ukm ->
-                    UkmListItem(ukm = ukm) {
+                    RecycleUkmListItem(ukm = ukm) {
                         navController.navigate(Screen.FormBaru.withId(ukm.id))
                     }
                     HorizontalDivider()
@@ -173,7 +152,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navControlle
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp)
             ) {
                 items(filteredData) { ukm ->
-                    GridItem(ukm = ukm) {
+                    RecycleGridItem(ukm = ukm) {
                         navController.navigate(Screen.FormBaru.withId(ukm.id))
                     }
                 }
@@ -183,7 +162,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navControlle
 }
 
 @Composable
-fun UkmListItem(ukm: Ukm, onClick: () -> Unit) {
+fun RecycleUkmListItem(ukm: Ukm, onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth()
             .clickable { onClick() }
@@ -211,7 +190,7 @@ fun UkmListItem(ukm: Ukm, onClick: () -> Unit) {
 }
 
 @Composable
-fun GridItem(ukm: Ukm, onClick: () -> Unit) {
+fun RecycleGridItem(ukm: Ukm, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth().clickable { onClick() },
         colors = CardDefaults.cardColors(
@@ -251,8 +230,8 @@ fun GridItem(ukm: Ukm, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun MainScreenPreview() {
+fun RecycleScreenPreview() {
     Asesment2_mobpro1Theme {
-        MainScreen(rememberNavController())
+        RecycleScreen(rememberNavController())
     }
 }

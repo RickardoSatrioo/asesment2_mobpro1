@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.rickardosatrioabout.asesment2_mobpro1.ui.screen.DetailScreen
 import com.rickardosatrioabout.asesment2_mobpro1.ui.screen.MainScreen
-
+import com.rickardosatrioabout.asesment2_mobpro1.ui.screen.RecycleScreen
 
 @Composable
 fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
@@ -21,6 +21,9 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         composable(route = Screen.FormBaru.route) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
             DetailScreen(navController, id)
+        }
+        composable(route = Screen.Recycle.route) {
+            RecycleScreen(navController)
         }
     }
 }

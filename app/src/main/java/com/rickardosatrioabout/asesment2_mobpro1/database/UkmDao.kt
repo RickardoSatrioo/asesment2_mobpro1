@@ -28,4 +28,7 @@ interface UkmDao {
 
     @Delete
     suspend fun delete(ukm: Ukm)
+
+    @Query("UPDATE ukm SET status = 0 WHERE id = :id")
+    suspend fun nonaktifkanById(id: Long)
 }

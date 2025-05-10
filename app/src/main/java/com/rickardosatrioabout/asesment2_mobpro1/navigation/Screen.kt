@@ -7,4 +7,5 @@ sealed class Screen(val route: String) {
             return "form_baru/$id"
         }
     }
+    object Recycle : Screen("recycle")
 }
