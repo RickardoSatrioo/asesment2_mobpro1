@@ -20,4 +20,8 @@ interface UkmDao {
 
     @Query("SELECT * FROM ukm WHERE id = :id")
     suspend fun getUkmById(id: Long): Ukm?
+
+
+    @Query("DELETE FROM ukm WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }
