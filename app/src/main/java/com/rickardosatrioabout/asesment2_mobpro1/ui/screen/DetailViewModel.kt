@@ -20,10 +20,12 @@ class DetailViewModel(private val dao: UkmDao) : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             dao.insert(ukm)
-            // Setelah insert, ambil data terbaru
-            val newUkm = dao.getUkmById(ukm.id)  // Jika insert berhasil, ambil data terbaru
-            // Update UI dengan data baru, menggunakan LiveData atau State
+            val newUkm = dao.getUkmById(ukm.id)
         }
+    }
+
+    suspend fun getUkm(id: Long): Ukm? {
+        return dao.getUkmById(id)
     }
 
     fun update(id: Long, namaUkm: String, ketuaUkm: String, kontak: String, deskripsi: String) {
@@ -37,13 +39,7 @@ class DetailViewModel(private val dao: UkmDao) : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             dao.update(ukm)
-            // Setelah update, ambil data terbaru
-            val updatedUkm = dao.getUkmById(id)  // Ambil data yang sudah diperbarui
-            // Update UI dengan data baru, menggunakan LiveData atau State
         }
     }
 
-    suspend fun getUkm(id: Long): Ukm? {
-        return dao.getUkmById(id)
-    }
 }

@@ -18,6 +18,6 @@ interface UkmDao {
     @Query("SELECT * FROM ukm ORDER BY namaukm ASC")
     fun getUkm(): Flow<List<Ukm>>
 
-    @Query("SELECT * FROM ukm WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM ukm WHERE id = :id")
     suspend fun getUkmById(id: Long): Ukm?
 }
