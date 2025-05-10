@@ -1,6 +1,7 @@
 package com.rickardosatrioabout.asesment2_mobpro1.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -24,4 +25,7 @@ interface UkmDao {
 
     @Query("DELETE FROM ukm WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Delete
+    suspend fun delete(ukm: Ukm)
 }

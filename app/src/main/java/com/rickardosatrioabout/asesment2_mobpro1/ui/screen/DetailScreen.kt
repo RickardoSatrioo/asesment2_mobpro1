@@ -56,6 +56,7 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
     var namaKetua by remember { mutableStateOf("") }
     var kontakUkm by remember { mutableStateOf("") }
     var deskripsi by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
         id?.let { nonNullId ->
@@ -110,10 +111,9 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
-                    if (id !=null){
+                    if (id != null) {
                         DeleteActions {
-                            viewModel.delete(id)
-                            navController.popBackStack()
+                            showDialog = true
                         }
                     }
                 }
@@ -131,6 +131,17 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
             onDeskripsiChange = { deskripsi = it },
             modifier = Modifier.padding(padding)
         )
+
+        if (id != null && showDialog) {
+            DisplayAlertDialog(
+                onDismissRequest = { showDialog = false },
+                onConfirmation = {
+                    showDialog = false
+                    viewModel.delete(id)
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }
 
@@ -192,10 +203,10 @@ fun FormCatatan(
 }
 
 @Composable
-fun DeleteActions(delete: () -> Unit){
+fun DeleteActions(delete: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
-    IconButton(onClick = { expanded = true}) {
+    IconButton(onClick = { expanded = true }) {
         Icon(
             imageVector = Icons.Filled.MoreVert,
             contentDescription = stringResource(R.string.lainnya),
@@ -203,7 +214,7 @@ fun DeleteActions(delete: () -> Unit){
         )
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false}
+            onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(
                 text = {
